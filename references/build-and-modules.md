@@ -254,3 +254,93 @@ dependencies {
 ```
 
 **Default**: Use `implementation`. Only promote to `api` when a dependency type surfaces in a public API of the module (e.g., a `Flow<T>` in a repository interface where `T` lives in a different module).
+
+---
+
+## Gradle Wrapper — the File Everyone Forgets
+
+`gradle/wrapper/gradle-wrapper.properties` is the single most important file for build reproducibility. Without it, every developer and every CI machine uses whatever Gradle version their IDE happens to bundle — and Gradle/AGP version mismatches are the #1 source of new-project build failures.
+
+```properties
+# gradle/wrapper/gradle-wrapper.properties
+distributionBase=GRADLE_USER_HOME
+distributionPath=wrapper/dists
+distributionUrl=https\://services.gradle.org/distributions/gradle-8.7-bin.zip
+networkTimeout=10000
+validateDistributionUrl=true
+zipStoreBase=GRADLE_USER_HOME
+zipStorePath=wrapper/dists
+```
+
+### AGP ↔ Gradle compatibility matrix
+
+| AGP version | Required Gradle | Notes |
+|-------------|----------------|-------|
+| 8.5.x | 8.7 | Stable; recommended combination for 2024 projects |
+| 8.6.x | 8.7 | Minor bump |
+| 8.7.x | 8.9 | Required — do NOT use with Gradle 8.11+ (breaks `debugRuntimeClasspathCopy`) |
+| 8.8.x | 8.10.2 | Gradle 8.11 strict mode compatible |
+
+**Rule**: Always set the wrapper URL explicitly. Never rely on the IDE's bundled Gradle.
+
+```bash
+# Regenerate the wrapper with a specific version
+./gradlew wrapper --gradle-version=8.7 --distribution-type=bin
+```
+
+---
+
+## App Bootstrap Resources
+
+Every new `:app` module needs these XML resources before the first Gradle build or AAPT will fail with "resource not found" errors. These are not optional — even a Compose-only app with no XML layouts needs them.
+
+### Minimum required files
+
+```
+app/src/main/res/
+├── values/
+│   ├── strings.xml    ← android:label in manifest
+│   └── themes.xml     ← android:theme in manifest (no-action-bar for Compose)
+├── drawable/
+│   ├── ic_launcher_background.xml   ← adaptive icon background
+│   └── ic_launcher_foreground.xml   ← adaptive icon foreground
+└── mipmap-anydpi-v26/
+    ├── ic_launcher.xml              ← adaptive icon (API 26+)
+    └── ic_launcher_round.xml        ← same, for round launchers
+```
+
+### themes.xml (no-ActionBar for Compose)
+
+```xml
+<resources>
+    <style name="Theme.YourApp" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
+```
+
+### Adaptive icon setup (no PNG files needed if minSdk ≥ 26)
+
+```xml
+<!-- drawable/ic_launcher_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="#006874" />   <!-- use your brand primary color -->
+</shape>
+
+<!-- drawable/ic_launcher_foreground.xml -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path android:fillColor="#FFFFFF"
+          android:pathData="M54,24 A30,30 0,1,0 54,84 A30,30 0,0,0 54,24Z
+                            M54,76 A22,22 0,1,1 54,32 A22,22 0,0,1 54,76Z"/>
+</vector>
+
+<!-- mipmap-anydpi-v26/ic_launcher.xml -->
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/ic_launcher_background" />
+    <foreground android:drawable="@drawable/ic_launcher_foreground" />
+</adaptive-icon>
+```
+
+**minSdk note**: If your minSdk is < 26, you must also provide PNG fallbacks in `mipmap-hdpi/`, `mipmap-xhdpi/`, `mipmap-xxhdpi/`, and `mipmap-xxxhdpi/`. Standard sizes: hdpi=72dp, xhdpi=96dp, xxhdpi=144dp, xxxhdpi=192dp. For new apps in 2025, minSdk 26 is the practical minimum (API 26 = ~99% device coverage).
