@@ -344,3 +344,17 @@ app/src/main/res/
 ```
 
 **minSdk note**: If your minSdk is < 26, you must also provide PNG fallbacks in `mipmap-hdpi/`, `mipmap-xhdpi/`, `mipmap-xxhdpi/`, and `mipmap-xxxhdpi/`. Standard sizes: hdpi=72dp, xhdpi=96dp, xxhdpi=144dp, xxxhdpi=192dp. For new apps in 2025, minSdk 26 is the practical minimum (API 26 = ~99% device coverage).
+
+**VectorDrawable element restriction**: Android VectorDrawable only supports `<path>`, `<group>`, and `<clip-path>` elements — NOT SVG shape elements like `<circle>`, `<rect>`, or `<ellipse>`. Draw all shapes as path data:
+
+```xml
+<!-- WRONG — <circle> is SVG, not Android VectorDrawable -->
+<circle android:cx="54" android:cy="54" android:r="8" />
+
+<!-- CORRECT — circle as two arc path commands -->
+<!-- Center (54,54), radius 8: start at leftmost point, arc to rightmost, arc back -->
+<path android:pathData="M46,54 A8,8 0 1 0 62,54 A8,8 0 1 0 46,54 Z" />
+
+<!-- CORRECT — rectangle as M (moveto) + L (lineto) commands -->
+<path android:pathData="M10,10 L90,10 L90,90 L10,90 Z" />
+```
