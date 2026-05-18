@@ -37,6 +37,7 @@ Production-grade Android engineering expertise from data layer to pixel, from st
 
 | Task | Reference |
 |------|-----------|
+| Color theming, 29 roles, token hierarchy, gradients | [`theming-and-color.md`](references/theming-and-color.md) |
 | Building a new screen | [`compose-ui-system.md`](references/compose-ui-system.md) |
 | Navigation with shared element transitions | [`shared-element-transitions.md`](references/shared-element-transitions.md) |
 | Type-safe navigation, deep links, multi-module | [`navigation.md`](references/navigation.md) |
