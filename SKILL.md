@@ -1,20 +1,25 @@
 ---
 name: android
 description: |
-  Expert Android engineering for Jetpack Compose, Material 3, shared element transitions,
-  and extraordinary UI quality. Load this skill for ANY Android or Compose task — writing
-  a new screen, animating a navigation transition, building a design system, scaffolding
-  a feature module, debugging with ADB or Android MCP, optimising a ViewModel, setting up
-  Hilt, Room, Retrofit, or screenshot testing.
-  
-  This skill enforces a non-negotiable aesthetic bar: every screen it helps produce must
-  look like it belongs in a design award showcase. Default-styled, grey-background,
-  animation-free UIs are a failure mode. Beauty is a deliverable.
-  
-  Trigger on: any Android/Kotlin/Compose task, any mention of navigation transitions or
-  animations, any mention of beautiful UI or design system, feature scaffolding, ADB
-  debugging, MCP device interaction, architecture questions (MVVM, MVI, ViewModel, Flow),
-  or Gradle/module structure work. If in doubt, load it.
+  Senior-level Android engineering expertise for Jetpack Compose, Material 3, shared element
+  transitions, navigation, performance, security, background work, notifications, adaptive
+  layouts, Coil image loading, WorkManager, FCM, Baseline Profiles, R8 optimization,
+  accessibility, coroutines and Flow, and extraordinary UI quality.
+
+  Load this skill for ANY Android or Kotlin task — building a screen, animating a transition,
+  designing a data layer, scaffolding a multi-module project, optimising startup, adding
+  biometric auth, writing WorkManager jobs, wiring FCM, handling foldables, writing
+  Roborazzi screenshot tests, debugging on device with ADB or MCP. If it touches Android,
+  this skill covers it.
+
+  Non-negotiable aesthetic bar: every screen produced must look like it belongs in a
+  design award showcase. Default grey scaffolds, missing animations, hardcoded colors,
+  and spinners as sole loading states are bugs, not style choices.
+
+  Trigger on: Kotlin, Jetpack Compose, ViewModel, Hilt, Room, Retrofit, Coroutines, Flow,
+  Navigation, WorkManager, FCM, Coil, Roborazzi, Macrobenchmark, Baseline Profiles, R8,
+  WindowSizeClass, foldables, shared element transitions, animation, ADB, MCP.
+
 compatibility:
   tools: [android_mcp, bash_tool, create_file, str_replace, view]
   compose_bom: "2024.09.00+"
@@ -24,187 +29,156 @@ compatibility:
 
 # Android Development Skill
 
-This skill exists because Android engineering has two distinct failure modes: code that doesn't work, and code that works but produces UIs no one wants to use. Most guidance addresses the first. This skill addresses both, treating visual quality as a first-class engineering concern on par with correctness, performance, and maintainability.
-
-Use this skill to build production-grade Android applications with Jetpack Compose, Material 3, shared element transitions, and a design system that produces screens a designer would be proud of — not just screens that pass code review.
+Production-grade Android engineering expertise from data layer to pixel, from startup milliseconds to biometric auth, from phone portrait to foldable landscape. UI quality, performance, security, and accessibility are first-class concerns equal to functional correctness.
 
 ---
 
 ## ⚡ Quick Decision Guide
 
-| What you're doing | Where to start |
-|---|---|
-| Building a new screen | [`references/compose-ui-system.md`](references/compose-ui-system.md) |
-| Adding navigation with shared element transitions | [`references/shared-element-transitions.md`](references/shared-element-transitions.md) |
-| Building any animation (not shared elements) | [`references/motion-and-animation.md`](references/motion-and-animation.md) |
-| Scaffolding a feature module | [`references/build-and-modules.md`](references/build-and-modules.md) |
-| Data / networking / offline-first | [`references/data-layer.md`](references/data-layer.md) |
-| State, ViewModel, or architecture question | [`references/architecture.md`](references/architecture.md) |
-| Writing tests or screenshot tests | [`references/testing.md`](references/testing.md) |
-| Debugging on device / using Android MCP | [`references/android-mcp.md`](references/android-mcp.md) |
-| UI quality review before shipping | [`assets/ui-excellence-checklist.md`](assets/ui-excellence-checklist.md) |
+| Task | Reference |
+|------|-----------|
+| Building a new screen | [`compose-ui-system.md`](references/compose-ui-system.md) |
+| Navigation with shared element transitions | [`shared-element-transitions.md`](references/shared-element-transitions.md) |
+| Type-safe navigation, deep links, multi-module | [`navigation.md`](references/navigation.md) |
+| Animation / motion (non-shared-element) | [`motion-and-animation.md`](references/motion-and-animation.md) |
+| Adaptive layouts, large screens, foldables | [`adaptive-layouts.md`](references/adaptive-layouts.md) |
+| Coroutines, Flow, dispatchers, cancellation | [`coroutines-and-flow.md`](references/coroutines-and-flow.md) |
+| Room, Retrofit, offline-first data layer | [`data-layer.md`](references/data-layer.md) |
+| ViewModel, state, DI, architecture | [`architecture.md`](references/architecture.md) |
+| Baseline Profiles, R8, recomposition perf | [`performance.md`](references/performance.md) |
+| Encryption, biometrics, cert pinning | [`security.md`](references/security.md) |
+| WorkManager, Foreground Services, Alarms | [`background-work.md`](references/background-work.md) |
+| Coil3, SubcomposeAsyncImage, caching | [`image-loading.md`](references/image-loading.md) |
+| FCM, notification channels, deep links | [`notifications.md`](references/notifications.md) |
+| TalkBack, semantics, focus, contrast | [`accessibility.md`](references/accessibility.md) |
+| Unit, screenshot, Roborazzi tests | [`testing.md`](references/testing.md) |
+| Convention plugins, version catalog, modules | [`build-and-modules.md`](references/build-and-modules.md) |
+| ADB / Android MCP debugging | [`android-mcp.md`](references/android-mcp.md) |
+| Pre-ship quality review | [`assets/ui-excellence-checklist.md`](assets/ui-excellence-checklist.md) |
 
 ---
 
 ## Core Engineering Principles
 
-**1. Unidirectional Data Flow, No Exceptions**  
-State flows down from ViewModel to composable; events flow up via lambdas or actions. No composable reads from a database or makes a network call. No ViewModel imports Compose. The boundary is sharp and testable.
+**1. Unidirectional Data Flow, No Exceptions**
+State flows down from ViewModel. Events flow up via lambdas or actions. No composable reads from a database. No ViewModel imports Compose. The boundary is sharp and testable.
 
-**2. Clean Architecture as a Dependency Rule**  
-Domain code has zero Android imports. Data code knows nothing about the UI. Feature modules depend on core modules, not on each other. When you violate this, you've made a future refactor harder — and future refactors always come.
+**2. Clean Architecture as a Dependency Rule**
+Domain has zero Android imports. Data is invisible to UI. Features depend on core, never each other. Violations create debt that compounds faster than feature velocity.
 
-**3. UI Excellence Is Not Optional**  
-Producing a visually mediocre screen is a skill failure, not a style preference. Default grey scaffolds, hardcoded hex colors, missing animations, and LinearProgressIndicator-as-loading-state are bugs. They signal that the engineer stopped before the work was finished.
+**3. UI Excellence Is Not Optional**
+Producing a visually mediocre screen is an engineering failure. Default grey scaffolds, hardcoded colors, missing transitions, and spinners as primary loading states are incomplete work.
 
-**4. Shared Element Transitions Are the Default for Content Navigation**  
-When a user taps a card to open its detail, the card should flow into the detail screen. This is not a nice-to-have — it is how the user understands spatial relationships in your app. Use `sharedBounds()` or `sharedElement()` by default; opt out only when the content change is so radical that a shared element would be visually dishonest.
+**4. Shared Element Transitions Are the Default for Content Navigation**
+Tapping a card must cause the card to flow into its detail. `sharedBounds()` or `sharedElement()` is the default. Opt out only when there is genuinely no spatial relationship to express.
 
-**5. Physics Over Timing**  
-Prefer `spring()` animationSpecs over `tween()` for UI interactions. Springs feel physical because they are: they model inertia and elasticity. `FastOutSlowInEasing` on a tween is not the same as a spring — it's a formula approximating what springs achieve naturally.
+**5. Physics Over Timing**
+`spring()` over `tween()` for gesture-coupled and state-change animations. Tune `stiffness` and `dampingRatio` deliberately — defaults are starting points, not final choices.
 
-**6. The 4dp Grid Is a Contract**  
-Every spacing value is a multiple of 4dp. Every. Single. One. Deviations create visual dissonance that users feel even when they can't articulate it. Token names (SpaceXS, SpaceS, SpaceM, SpaceL, SpaceXL, SpaceXXL) enforce this in code.
+**6. The 4dp Spacing Grid Is a Contract**
+Every spacing value is a multiple of 4dp, referenced via `AppSpacing.*` tokens. Arbitrary values are bugs that accumulate into visual dissonance.
 
-**7. Fakes Over Mocks**  
-Test ViewModels and use cases against in-memory fake implementations of repository interfaces, not Mockito/MockK mocks. Fakes exercise the same contract as production code and survive API changes without test rewrites.
+**7. Fakes Over Mocks**
+Test ViewModels against in-memory fake implementations. Fakes exercise real contracts, survive refactors. Mocks couple tests to implementation details and silently pass when production code breaks.
 
-**8. MCP Is Part of the Review Process**  
-Screenshots taken by Roborazzi verify code-level rendering. Screenshots taken by Android MCP verify device-level reality — insets, font scaling, density quirks, animation timing. Both are necessary. Neither replaces the other.
+**8. Performance Is a Feature**
+Baseline Profiles are committed for every app shipped. Recomposition counts are checked with Layout Inspector before any UI work is done. Cold start is tracked in CI via Macrobenchmark.
+
+**9. Security from Day One**
+Encrypted storage for all sensitive data. Certificate pinning for all network endpoints. No secrets in source code. Input validated at every external boundary. These are not features to add later.
+
+**10. Accessibility Is Not Optional**
+Every image has a content description. Every custom component declares its semantic role. Every interactive element has a 48dp touch target. Colour contrast meets WCAG AA. TalkBack is tested before any screen is shipped.
 
 ---
 
 ## ★ THE EXTRAORDINARY UI MANDATE ★
 
-Android users have seen a million apps. The ones they remember have something alive about them — a transition that makes content feel like a physical object moving through space, a color palette that makes a mid-range phone feel premium, a loading state so well-crafted it doesn't feel like waiting. These apps don't achieve this by accident. They achieve it because someone decided, deliberately, that quality was the non-negotiable output.
+Android users have seen a million apps. The ones they remember have something alive about them — a transition that makes content feel like a physical object moving through space, surfaces that catch light at different elevations, a loading state so well crafted it does not feel like waiting.
 
-**The Bar.** Every screen produced by this skill must pass three tests:
+**The Bar.** Every screen passes three tests before it ships:
 
-1. **The scroll-stop test.** Would a designer stop scrolling on Dribbble if they saw this? Not because it's garish, but because something about it is considered — a hierarchy that breathes, a transition that surprises you with how right it feels, surfaces that catch the light differently at different elevations.
+1. **The scroll-stop test.** Would a designer pause on this if scrolling past it? Not because it is garish — because something is considered. A hierarchy that breathes. A transition that reveals spatial relationship. A surface treatment that says "we care."
 
-2. **The feel test.** Does it respond to touch like a physical object, or like a web form from 2012? Press feedback, spring physics on expand/collapse, haptic coordination with state changes — these aren't extras, they're the product.
+2. **The feel test.** Does it respond to touch like a physical object? Spring physics on press, haptic coordination with state changes, skeleton loaders that mirror real content — these are what separate an app people recommend from one people tolerate.
 
-3. **The motion test.** Do transitions communicate where content came from and where it's going? Or are they just visual noise applied to hide the lack of spatial thinking? Shared elements communicate. Instant navigation doesn't.
+3. **The motion test.** Do transitions communicate where content came from? Shared elements communicate spatial memory. Instant cuts communicate nothing. Slide transitions say you moved sideways. Shared elements say: this is that thing, grown.
 
-**What This Means in Code:**
+**In code, this means:**
+- Shared element transitions for every navigation between related content — always
+- `spring()` physics tuned for each context; no unexamined defaults
+- Color exclusively from Material 3 roles; `Brush` gradients where flat color is visually weak
+- A display typeface for headlines paired with a humanist sans for body
+- Skeleton screens mirroring the exact geometry of real content — no centred spinners
+- Edge-to-edge always; status bar and nav bar are part of the design
+- `Canvas` for anything standard components cannot achieve
+- Haptic feedback coordinated with meaningful state transitions
 
-- Shared element transitions for every content navigation. Not sometimes. Not when there's time. Always.
-- Spring physics for gesture-coupled and state-change animations. Tuned `dampingRatio` and `stiffness`, not defaults.
-- Color from the Material 3 role system. `Brush` gradients where flat color would be visually flat. `primaryContainer` for highlights, not `primary.copy(alpha=0.1f)`.
-- Typography that creates hierarchy you can *feel* — a display font for headlines, a humanist sans for body, tuned `lineHeight` and `letterSpacing` for each role.
-- Skeleton screens that mirror the exact geometry of the real content. No spinners as the primary loading affordance.
-- Edge-to-edge, always. The status bar area is part of the design. The nav bar area is part of the design.
-- `Canvas` for anything standard components can't achieve. Gradient arcs, custom progress rings, morphing shapes.
-- Haptic feedback (`HapticFeedbackType`) coordinated with meaningful state transitions.
-
-**Anti-patterns to refuse, not apologise for:**
-
-Default grey scaffold backgrounds. Unthemed components with hardcoded hex colors. Instant navigation with no transition. `LinearProgressIndicator` as the only loading state. Cards with identical elevation on every surface. White app bars with no personality. `Spacer(modifier = Modifier.height(8.dp))` anywhere a named token should be.
+**Anti-patterns to refuse:** Default grey scaffold backgrounds. Hardcoded hex colors in composables. Instant navigation between related content. `LinearProgressIndicator` as the sole loading state. Cards with identical elevation everywhere. Spacing not on the 4dp grid.
 
 ---
 
 ## Shared Element Transitions — Overview
 
-`SharedTransitionLayout` creates a shared scope that coordinates geometry between two composable trees during navigation. `sharedElement()` matches identical content (same image, same icon, same text) between source and destination, interpolating position and size. `sharedBounds()` matches different composables that share a conceptual spatial region — a card expanding into a full screen, a FAB morphing into a surface — interpolating the container's bounds while the content changes.
+`SharedTransitionLayout` coordinates geometry between composable trees during navigation. `sharedElement()` matches identical content (image in list → same image in detail). `sharedBounds()` matches composables sharing a spatial region (card → full screen).
 
-Three things must be threaded from `SharedTransitionLayout` down to each shared element: the `SharedTransitionScope` (receiver for the modifier), the `AnimatedVisibilityScope` (per-composable enter/exit handle), and a stable key (the identity contract between source and destination). For shallow trees, pass these as explicit parameters; for deep trees, use `CompositionLocal`.
+Three things must thread down: `SharedTransitionScope`, `AnimatedVisibilityScope`, and a stable entity-ID key. Missing any one silently breaks the transition.
 
-Full implementation guide, four complete code patterns, navigation integration, and six pitfall+fix entries are in [`references/shared-element-transitions.md`](references/shared-element-transitions.md). This is one of the most powerful tools available for extraordinary UI — use it.
-
-Reference: https://developer.android.com/develop/ui/compose/animation/shared-elements
+Full guide, four complete Kotlin patterns, pitfalls: [`references/shared-element-transitions.md`](references/shared-element-transitions.md)
 
 ---
 
 ## Android MCP Integration
 
-Android MCP gives you device eyes: screenshot capture, UI hierarchy dump, logcat streaming, shell commands, and APK installation — all from within the coding session. The mental model: MCP is your eyes on the device; code is your hands in the codebase. Use both together.
+MCP = eyes on device. Code = hands in codebase. Build → install → screenshot → compare → refine. Catches what Roborazzi misses: real inset behaviour, animation timing, system bar styling, density quirks.
 
-Build → install via MCP → screenshot → compare to design → fix → repeat. This loop, running on a real device or emulator, catches issues that Roborazzi (JVM-rendered) misses: inset handling, density edge cases, animation timing, and system bar styling. After any significant UI change, run the loop.
-
-Full capability list, workflow scripts for screenshot review, log filtering, UI hierarchy inspection, animation debugging, and responsive testing (font scale, RTL, density, foldable) are in [`references/android-mcp.md`](references/android-mcp.md).
+Full capability table, workflows, log filtering, hierarchy inspection: [`references/android-mcp.md`](references/android-mcp.md)
 
 ---
 
 ## Feature Build Workflow
 
-1. **Create feature module** — `./gradlew createModule --name feature:X`; apply `yourapp.android.library` and `yourapp.android.library.compose` plugins. See `references/build-and-modules.md`.
-
-2. **Define route** — Add `@Serializable data class XRoute(val id: Long)` to `:core:navigation`. Register in the NavHost.
-
-3. **Model UI state** — Sealed interface with `Loading`, `Ready(data)`, `Error(message, canRetry)`. See `references/architecture.md`.
-
-4. **Define actions** — Sealed interface covering every user interaction the screen handles.
-
-5. **Build ViewModel** — `StateFlow` for state, `SharedFlow(replay=0)` for events, `SavedStateHandle.toRoute()` for arguments. See `references/architecture.md`.
-
-6. **Define domain layer** — UseCase calling Repository interface. Repository implementation in `:core:data`. See `references/data-layer.md`.
-
-7. **Build the screen composable** — Public function receives `sharedTransitionScope`, `animatedVisibilityScope`, and `onAction`. Internal sections are private. See `references/compose-ui-system.md`.
-
-8. **Apply shared element transitions** — Identify which elements should persist spatially across navigation. Apply `sharedElement()` or `sharedBounds()` with stable ID-based keys. See `references/shared-element-transitions.md`.
-
-9. **Apply motion** — Stagger list entry, animate state changes with spring physics, add enter/exit transitions. See `references/motion-and-animation.md`.
-
-10. **Apply design system** — All colors from `MaterialTheme.colorScheme`, all spacing from `AppSpacing.*`, all typography from `MaterialTheme.typography`. Add gradient or texture where flat color would be weak. See `references/compose-ui-system.md`.
-
-11. **Add skeleton loading** — Mirror the exact geometry of `Ready` state in a `Loading` composable using `ShimmerBox`. No spinners as primary loading affordance.
-
-12. **Verify with MCP** — Build, install, screenshot in light/dark/large font/RTL. Check insets, shared element timing, press feedback. See `references/android-mcp.md`.
-
-13. **Write tests** — ViewModel unit tests with `FakeRepository`. Compose UI test for key interactions. Roborazzi screenshot in light and dark. See `references/testing.md`.
-
-14. **UI excellence review** — Run every item in [`assets/ui-excellence-checklist.md`](assets/ui-excellence-checklist.md). Fix every failing item before marking the feature done.
+1. **Module** — Create with `yourapp.android.library.compose` plugin. [`build-and-modules.md`](references/build-and-modules.md)
+2. **Routes** — `@Serializable` data class in `:core:navigation`. [`navigation.md`](references/navigation.md)
+3. **UI State** — Sealed interface: `Loading`, `Ready(data)`, `Error(message, canRetry)`. [`architecture.md`](references/architecture.md)
+4. **Actions** — Sealed interface for all user interactions.
+5. **ViewModel** — `StateFlow` + `SharedFlow(replay=0)` + `SavedStateHandle.toRoute()`. [`architecture.md`](references/architecture.md)
+6. **Domain** — UseCase → Repository interface → impl in `:core:data`. [`data-layer.md`](references/data-layer.md)
+7. **Composables** — Public screen + private sub-composables; `AppSpacing`, `colorScheme`, `typography` only. [`compose-ui-system.md`](references/compose-ui-system.md)
+8. **Shared elements** — `sharedElement()` or `sharedBounds()` with stable ID keys. [`shared-element-transitions.md`](references/shared-element-transitions.md)
+9. **Motion** — Stagger entry, spring state changes, enter/exit transitions. [`motion-and-animation.md`](references/motion-and-animation.md)
+10. **Skeleton loading** — Mirror `Ready` geometry with `ShimmerBox`. [`compose-ui-system.md`](references/compose-ui-system.md)
+11. **Adaptive** — Verify on 600dp+; apply `WindowSizeClass`-aware layout. [`adaptive-layouts.md`](references/adaptive-layouts.md)
+12. **Accessibility** — Semantics, content descriptions, focus order, 48dp targets. [`accessibility.md`](references/accessibility.md)
+13. **Security** — No secrets; input validated at all external boundaries. [`security.md`](references/security.md)
+14. **MCP review** — Screenshot in light/dark/large font/RTL; check insets + transitions. [`android-mcp.md`](references/android-mcp.md)
+15. **Tests** — ViewModel unit tests + Roborazzi screenshots. [`testing.md`](references/testing.md)
+16. **UI excellence** — Every item in [`assets/ui-excellence-checklist.md`](assets/ui-excellence-checklist.md) must pass.
 
 ---
 
 ## Common Pitfalls
 
-**1. Hardcoded colors in composables**  
-*Symptom*: Dark mode is broken; a surface is always white.  
-*Cause*: `Color(0xFFFFFFFF)` or `Color.White` used instead of `MaterialTheme.colorScheme.surface`.  
-*Fix*: Every color reference goes through the Material 3 color role system. Create a `CompositionLocal` for any role Material 3 doesn't cover.
+**1. Hardcoded colors** — `Color.White` in a composable. Fix: all colors via `MaterialTheme.colorScheme.*`.
 
-**2. Missing `Modifier` parameter**  
-*Symptom*: Composable can't be padded or sized by its caller; preview clips content.  
-*Cause*: `modifier: Modifier = Modifier` omitted from the function signature.  
-*Fix*: Every public composable takes `modifier: Modifier = Modifier` as the first optional parameter, applied to its outermost layout element.
+**2. Missing `modifier` parameter** — Composable cannot be resized by caller. Fix: every public composable takes `modifier: Modifier = Modifier` on its outermost layout.
 
-**3. Shared element key mismatch — no animation fires**  
-*Symptom*: Navigation works but the element snaps instantly with no transition.  
-*Cause*: The key in the source composable doesn't equal the key in the destination. Often a string template typo or using list index instead of entity ID.  
-*Fix*: Build keys from stable entity IDs (`"image-${item.id}"`). Log both keys and compare. See `references/shared-element-transitions.md` → Pitfall 1.
+**3. SharedFlow vs StateFlow for events** — Toast fires again on rotation. Fix: events = `MutableSharedFlow(replay=0)`. State = `MutableStateFlow(initial)`.
 
-**4. SharedTransitionLayout not wrapping the NavHost**  
-*Symptom*: `IllegalStateException: No SharedTransitionScope found` at runtime.  
-*Cause*: `SharedTransitionLayout` wraps only one screen composable instead of the NavHost that contains both source and destination.  
-*Fix*: `SharedTransitionLayout { NavHost(...) { ... } }`. The layout must contain the entire region where elements will transition.
+**4. Shared element key mismatch** — Navigation works but no transition fires. Fix: build from stable entity ID. Log both sides and compare.
 
-**5. Spinner as the only loading state**  
-*Symptom*: The screen shows a `CircularProgressIndicator` centred on a grey background while content loads.  
-*Cause*: Loading state was left at the first-pass implementation.  
-*Fix*: Build a skeleton composable that mirrors the exact dimensions and layout of the `Ready` state using `ShimmerBox`. See `references/compose-ui-system.md` → Skeleton Shimmer.
+**5. SharedTransitionLayout not wrapping NavHost** — `IllegalStateException: No SharedTransitionScope`. Fix: `SharedTransitionLayout { NavHost { } }` — must contain both source and destination.
 
-**6. StateFlow vs SharedFlow confusion for events**  
-*Symptom*: A toast or navigation event fires again after screen rotation or process restoration.  
-*Cause*: One-time events stored in `StateFlow` (which replays the last value) instead of `SharedFlow(replay=0)`.  
-*Fix*: Events = `MutableSharedFlow(replay=0)`. State = `MutableStateFlow(initialValue)`. Never mix the two.
+**6. Missing renderInSharedTransitionScope** — Back button blinks into existence at transition end. Fix: apply `.renderInSharedTransitionScope(scope).animateEnterExit(...)` to destination-only elements.
 
-**7. renderInSharedTransitionScope omitted — element blinks**  
-*Symptom*: A back button or toolbar that only exists on the destination screen is invisible during the shared element transition and appears abruptly when it completes.  
-*Cause*: The element is not participating in the shared overlay layer.  
-*Fix*: Apply `.renderInSharedTransitionScope(sharedTransitionScope).animateEnterExit(enter = fadeIn(...))` to any element that must be visible during the transition but has no matching key on the source screen. See `references/shared-element-transitions.md` → Pitfall 4.
+**7. Blocking main thread** — ANR or UI freeze. Fix: `withContext(dispatchers.io)` for all I/O; never `runBlocking` on the main dispatcher.
 
-**8. No `clipInOverlayDuringTransition` on sharedBounds — visual artefacts**  
-*Symptom*: The shared bounds clips incorrectly during the transition — wrong corners, content bleeds outside the card shape.  
-*Cause*: `sharedBounds()` uses a rectangular clip by default, which doesn't match the rounded card shape.  
-*Fix*: Pass `clipInOverlayDuringTransition = OverlayClip(cardShape)` matching the source shape. Avoid applying `Modifier.clip()` before `sharedBounds()`. See `references/shared-element-transitions.md` → Pitfall 6.
+**8. Spinner as only loading state** — `CircularProgressIndicator` centred on a blank background. Fix: `ShimmerBox` composable mirroring `Ready` geometry.
 
-**9. Spacing values not on the 4dp grid**  
-*Symptom*: Design review flags inconsistent padding; visual rhythm feels slightly off.  
-*Cause*: Hardcoded `Modifier.padding(12.dp)` or `Modifier.padding(6.dp)` instead of named tokens.  
-*Fix*: Replace every hardcoded spacing value with `AppSpacing.*`. If 12dp is needed, it's `AppSpacing.S + AppSpacing.XS` — or question whether the design needs it at all.
+**9. Non-4dp spacing** — Visual rhythm feels slightly off; design review flags it. Fix: `AppSpacing.*` for every spacing value.
 
-**10. Unit tests mock the repository instead of using a fake**  
-*Symptom*: Tests pass locally but break when the repository interface changes; tests become brittle and hard to read.  
-*Cause*: `Mockito.mock(ArticleRepository::class.java)` instead of `FakeArticleRepository`.  
-*Fix*: Implement `FakeArticleRepository` in `:core:testing`. It takes ~15 minutes once and saves hours of test maintenance over the life of the feature. See `references/testing.md`.
+**10. collectAsState instead of collectAsStateWithLifecycle** — Flow collects in background. Fix: always `collectAsStateWithLifecycle()` for UI-bound collection.
+
+**11. GlobalScope usage** — Coroutine leaks, ignores cancellation. Fix: `viewModelScope`, `lifecycleScope`, or `rememberCoroutineScope()`. Never `GlobalScope`.
+
+**12. Images loaded at full resolution for thumbnails** — OOM in lists. Fix: `.size(width, height)` in `ImageRequest` matching display dimensions.
